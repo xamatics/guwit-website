@@ -1,0 +1,23 @@
+/* COMPANY */
+
+    Name: Guwit Technology Solutions Ltd
+    Registration: RC 9040112 (Corporate Affairs Commission, Nigeria)
+    Type: Private company limited by shares
+    Address: 8 Obiwale Street, Mowo, Badagry, Lagos State, Nigeria
+    Contact: info@guwit.com
+    Site: https://guwit.com
+
+/* WHAT WE BUILD */
+
+    Mobile and web applications
+    Websites, design and hosting
+    WhatsApp business and ordering systems
+    Translation and localisation for low-resource languages
+    (Gungbe, Nigerian Pidgin, Yoruba)
+
+/* THIS SITE */
+
+    Language: English (en-NG)
+    Standards: HTML5, CSS3, Schema.org structured data, WCAG 2.1 AA
+    Typefaces: Newsreader, Plus Jakarta Sans, IBM Plex Mono
+    Built and maintained by: Guwit Technology Solutions Ltd
