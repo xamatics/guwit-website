@@ -1,0 +1,11 @@
+{
+  "name": "Guwit Technology Solutions Ltd",
+  "short_name": "Guwit",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8FC",
+  "theme_color": "#7B5C9D",
+  "icons": [
+    { "src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
