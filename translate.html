@@ -28,6 +28,7 @@
   }
   .topbar .name { font-weight:600; font-size:14px; }
   .topbar .spacer { flex:1 1 auto; }
+  .tool-links { display:flex; gap:8px; }
   .topbar a {
     font-size:13px; color:var(--muted); text-decoration:none;
     padding:6px 10px; border-radius:6px; border:1px solid var(--line);
@@ -86,8 +87,10 @@
   <div class="topbar">
     <span class="name">Translation Workbench</span>
     <span class="spacer"></span>
-    <a href="https://script.google.com/macros/s/AKfycbzKDcKglWKzbw8SVDZdORGpXnITKrWm221fb5119Iig1n6TGwRONG6XFYKCZbXC_FQpSw/exec"
-       target="_blank" rel="noopener">Open in new tab</a>
+    <nav class="tool-links" aria-label="Related tools">
+      <a href="https://guwit.com/guw.html" target="_blank" rel="noopener">Gungbe Translator/Converter</a>
+      <a href="https://guwit.com/pcm.html" target="_blank" rel="noopener">Pidgin Converter</a>
+    </nav>
   </div>
 
   <div class="frame-wrap">
@@ -103,14 +106,14 @@
         Google doesn't allow inside an embedded page. Open it directly instead.
       </p>
       <a class="btn"
-         href="https://script.google.com/macros/s/AKfycbyPh_P2wb-nt3a1f5609DmwJxI4wQCIVGpl9_bI_zRLeULB5B8hwnuxusvmPTOdrTLjHw/exec"
+         href="https://script.google.com/macros/s/AKfycbzKDcKglWKzbw8SVDZdORGpXnITKrWm221fb5119Iig1n6TGwRONG6XFYKCZbXC_FQpSw/exec"
          target="_blank" rel="noopener">Open Translation Workbench</a>
     </div>
 
     <iframe
       id="app-frame"
       title="Universal Translation OS"
-      src="https://script.google.com/macros/s/AKfycbyPh_P2wb-nt3a1f5609DmwJxI4wQCIVGpl9_bI_zRLeULB5B8hwnuxusvmPTOdrTLjHw/exec"
+      src="https://script.google.com/macros/s/AKfycbzKDcKglWKzbw8SVDZdORGpXnITKrWm221fb5119Iig1n6TGwRONG6XFYKCZbXC_FQpSw/exec"
       referrerpolicy="strict-origin-when-cross-origin"
       allow="clipboard-write"
     ></iframe>
