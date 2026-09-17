@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gungbe Dictionary — Guwit Technology Solutions Ltd</title>
-<meta name="description" content="A Gungbe Dictionary, built on Google Sheets by Guwit Technology Solutions Ltd.">
-<meta name="robots" content="noindex">
+<meta name="description" content="Look up Gungbe words and their English and French meanings — a free dictionary tool from Guwit Technology Solutions Ltd.">
 <meta name="author" content="Guwit Technology Solutions Ltd">
 <link rel="canonical" href="https://guwit.com/dictionary.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Guwit Technology Solutions Ltd">
 <meta property="og:title" content="Gungbe Dictionary — Guwit Technology Solutions Ltd">
-<meta property="og:description" content="A Gungbe Dictionary App">
+<meta property="og:description" content="Look up Gungbe words and their English and French meanings.">
 <meta property="og:url" content="https://guwit.com/dictionary.html">
 <meta property="og:image" content="https://guwit.com/assets/img/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -24,9 +23,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 <style>
-  /* Page-specific rules only — everything else (tokens, .site-header,
-     .brand, .eyebrow, .btn / .btn-line / .btn-sm, focus ring) comes from
-     assets/style.css so this page stays in sync with the rest of the site. */
+  /* Page-specific rules only — tokens, .site-header, .brand, .eyebrow,
+     focus ring, etc. all come from assets/style.css. */
 
   html, body { height:100%; }
 
@@ -39,16 +37,6 @@
   iframe{ width:100%; height:100%; border:0; display:block; background:var(--white); }
 
   .page-label{ flex:1 1 auto; min-width:0; }
-  .tool-links{ display:flex; gap:10px; flex:none; }
-
-  /* assets/style.css hides .header-inner .btn at ≤760px so a marketing CTA
-     can hand off to the hamburger menu. These two buttons are functional
-     navigation, not a CTA — keep them visible and tappable on mobile. */
-  @media (max-width:760px){
-    .page-label{ display:none; }
-    .header-inner .tool-links .btn{ display:inline-flex; }
-    .tool-links .btn{ padding:8px 12px; font-size:.8rem; }
-  }
 
   .loading{
     position:absolute; inset:0; display:flex; flex-direction:column;
@@ -84,14 +72,9 @@
       <a class="brand" href="https://guwit.com/">
         <span class="brand-name">Guwit</span>
       </a>
-
       <div class="page-label">
         <span class="eyebrow">Gungbe Dictionary</span>
       </div>
-
-      <nav class="tool-links" aria-label="Related tools">
-        <a class="btn btn-line btn-sm js-newtab" href="https://guwit.com/index.html">Visit Website</a>
-      </nav>
     </div>
   </header>
 
@@ -109,7 +92,7 @@
       </p>
       <a class="btn"
          href="https://script.google.com/macros/s/AKfycbz1a3S-sPzGDtk54AHIaRygtXG2Jqhc5JMk8P7RGpCYj3a_Ieq_f0zUC-f53IEgwnFsxQ/exec"
-         target="_blank" rel="noopener">Open Dictionary</a>
+         target="_blank" rel="noopener">Open the Gungbe Dictionary</a>
     </div>
 
     <iframe
@@ -142,20 +125,6 @@
       // Safety net: if 'load' never fires (blocked frame, network failure),
       // fall back to a direct link rather than spinning forever.
       window.setTimeout(function () { settle(!settled ? false : true); }, 12000);
-
-      // Related-tool links: some mobile browsers and in-app webviews (e.g.
-      // an app's embedded browser, or a PWA shell) silently ignore
-      // target="_blank" and navigate the current tab instead. Forcing the
-      // new tab explicitly, on the same user gesture, is the reliable way
-      // to guarantee translate.html is never replaced. The href/rel
-      // attributes stay in place as a fallback for keyboard, middle-click,
-      // long-press "open in new tab", and any JS-disabled context.
-      document.querySelectorAll('a.js-newtab').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          var opened = window.open(link.href, '_blank', 'noopener,noreferrer');
-          if (opened) e.preventDefault();
-        });
-      });
     })();
   </script>
 
