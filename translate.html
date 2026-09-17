@@ -88,8 +88,8 @@
     <span class="name">Translation Workbench</span>
     <span class="spacer"></span>
     <nav class="tool-links" aria-label="Related tools">
-      <a href="https://guwit.com/guw.html" target="_blank" rel="noopener">Gungbe Translator/Converter</a>
-      <a href="https://guwit.com/pcm.html" target="_blank" rel="noopener">Pidgin Converter</a>
+      <a class="js-newtab" href="https://guwit.com/guw.html" target="_blank" rel="noopener noreferrer">Gungbe Translator/Converter</a>
+      <a class="js-newtab" href="https://guwit.com/pcm.html" target="_blank" rel="noopener noreferrer">Pidgin Converter</a>
     </nav>
   </div>
 
@@ -140,6 +140,22 @@
       // Safety net: if 'load' never fires (blocked frame, network failure),
       // fall back to a direct link rather than spinning forever.
       window.setTimeout(function () { settle(!settled ? false : true); }, 12000);
+
+      // Related-tool links: some mobile browsers and in-app webviews (e.g.
+      // an app's embedded browser, or a PWA shell) silently ignore
+      // target="_blank" and navigate the current tab instead. Forcing the
+      // new tab explicitly, on the same user gesture, is the reliable way
+      // to guarantee translate.html is never replaced. The href/target/rel
+      // attributes stay in place as a fallback for keyboard, middle-click,
+      // long-press "open in new tab", and any JS-disabled context.
+      document.querySelectorAll('a.js-newtab').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var opened = window.open(link.href, '_blank', 'noopener,noreferrer');
+          if (opened) e.preventDefault(); // JS route worked — skip the default nav
+          // If window.open was blocked (e.g. popup blocker), do nothing here:
+          // the browser falls through to the anchor's own target="_blank".
+        });
+      });
     })();
   </script>
 
