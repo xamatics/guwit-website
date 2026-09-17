@@ -5,93 +5,82 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Translation Workbench — Guwit</title>
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Newsreader:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 <style>
-  :root {
-    --ink:#16211E; --paper:#F2F3EF; --surface:#FFFFFF;
-    --line:#DEE2DA; --muted:#68726D;
-    --pine:#175E54; --pine-dk:#0F463E;
-    --danger:#A3231C; --danger-sf:#FBEAE8;
-  }
-  * { box-sizing:border-box; }
-  html, body {
-    margin:0; padding:0; height:100%;
-    background:var(--paper); color:var(--ink);
-    font-family:-apple-system, 'Segoe UI', system-ui, sans-serif;
-  }
+  /* Page-specific rules only — everything else (tokens, .site-header,
+     .brand, .eyebrow, .btn / .btn-line / .btn-sm, focus ring) comes from
+     assets/style.css so this page stays in sync with the rest of the site. */
 
-  /* Frame fills the viewport minus a slim top bar so the tool feels native
-     to the page rather than a widget dropped into a box. */
-  .topbar {
-    display:flex; align-items:center; gap:10px;
-    height:48px; padding:0 16px; flex:none;
-    border-bottom:1px solid var(--line); background:var(--surface);
-  }
-  .topbar .name { font-weight:600; font-size:14px; }
-  .topbar .spacer { flex:1 1 auto; }
-  .tool-links { display:flex; gap:8px; }
-  .topbar a {
-    font-size:13px; color:var(--muted); text-decoration:none;
-    padding:6px 10px; border-radius:6px; border:1px solid var(--line);
-  }
-  .topbar a:hover { color:var(--ink); border-color:var(--pine); }
-  .topbar a:focus-visible { outline:2px solid var(--pine); outline-offset:2px; }
+  html, body { height:100%; }
 
-  .frame-wrap {
+  .frame-wrap{
+    --topbar-h:76px; /* matches .header-inner's fixed height in assets/style.css */
     position:relative;
-    height:calc(100vh - 48px);
-    height:calc(100dvh - 48px);
+    height:calc(100vh - var(--topbar-h));
+    height:calc(100dvh - var(--topbar-h));
   }
-  iframe {
-    width:100%; height:100%; border:0; display:block; background:var(--surface);
+  iframe{ width:100%; height:100%; border:0; display:block; background:var(--white); }
+
+  .page-label{ flex:1 1 auto; min-width:0; }
+  .tool-links{ display:flex; gap:10px; flex:none; }
+
+  /* assets/style.css hides .header-inner .btn at ≤760px so a marketing CTA
+     can hand off to the hamburger menu. These two buttons are functional
+     navigation, not a CTA — keep them visible and tappable on mobile. */
+  @media (max-width:760px){
+    .page-label{ display:none; }
+    .header-inner .tool-links .btn{ display:inline-flex; }
+    .tool-links .btn{ padding:8px 12px; font-size:.8rem; }
   }
 
-  /* Loading state — shown until the app inside the iframe reports itself
-     ready, so the page never looks frozen on a slow connection. */
-  .loading {
+  .loading{
     position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:12px;
+    align-items:center; justify-content:center; gap:14px;
     background:var(--paper); transition:opacity .25s ease;
   }
-  .loading.hide { opacity:0; pointer-events:none; }
-  .spinner {
+  .loading.hide{ opacity:0; pointer-events:none; }
+  .spinner{
     width:26px; height:26px; border-radius:50%;
-    border:3px solid var(--line); border-top-color:var(--pine);
+    border:3px solid var(--line); border-top-color:var(--plum);
     animation:spin .8s linear infinite;
   }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .loading p { margin:0; font-size:13px; color:var(--muted); }
-  @media (prefers-reduced-motion: reduce) {
-    .spinner { animation-duration:1.6s; }
-  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .loading p{ margin:0; font-size:.85rem; color:var(--ink-soft); }
 
-  /* Shown only if the iframe hasn't loaded after a timeout — most likely
-     the Apps Script deployment requires a Google sign-in, which cannot be
-     framed, or the deployment URL/access level changed. */
-  .fallback {
+  .fallback{
     position:absolute; inset:0; display:none; flex-direction:column;
-    align-items:center; justify-content:center; gap:14px;
-    background:var(--paper); text-align:center; padding:24px;
+    align-items:center; justify-content:center; gap:16px;
+    background:var(--paper); text-align:center; padding:28px;
   }
-  .fallback.show { display:flex; }
-  .fallback h2 { margin:0; font-size:16px; }
-  .fallback p { margin:0; max-width:420px; font-size:13px; color:var(--muted); line-height:1.5; }
-  .fallback a.btn {
-    font-size:14px; font-weight:600; color:#fff; background:var(--pine);
-    padding:10px 16px; border-radius:8px; text-decoration:none;
+  .fallback.show{ display:flex; }
+  .fallback h2{
+    margin:0; font-family:var(--display); font-weight:600;
+    font-size:1.3rem; color:var(--plum-ink);
   }
-  .fallback a.btn:hover { background:var(--pine-dk); }
+  .fallback p{ margin:0; max-width:420px; font-size:.9rem; color:var(--ink-soft); line-height:1.6; }
 </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <span class="name">Translation Workbench</span>
-    <span class="spacer"></span>
-    <nav class="tool-links" aria-label="Related tools">
-      <a class="js-newtab" href="https://guwit.com/guw.html" target="_blank" rel="noopener noreferrer">Gungbe Translator/Converter</a>
-      <a class="js-newtab" href="https://guwit.com/pcm.html" target="_blank" rel="noopener noreferrer">Pidgin Converter</a>
-    </nav>
-  </div>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="https://guwit.com/">
+        <span class="brand-name">Guwit</span>
+      </a>
+
+      <div class="page-label">
+        <span class="eyebrow">Translation Workbench</span>
+      </div>
+
+      <nav class="tool-links" aria-label="Related tools">
+        <a class="btn btn-line btn-sm js-newtab" href="https://guwit.com/guw.html">Gungbe Translator/Converter</a>
+        <a class="btn btn-line btn-sm js-newtab" href="https://guwit.com/pcm.html">Pidgin Converter</a>
+      </nav>
+    </div>
+  </header>
 
   <div class="frame-wrap">
     <div class="loading" id="loading">
@@ -145,15 +134,13 @@
       // an app's embedded browser, or a PWA shell) silently ignore
       // target="_blank" and navigate the current tab instead. Forcing the
       // new tab explicitly, on the same user gesture, is the reliable way
-      // to guarantee translate.html is never replaced. The href/target/rel
+      // to guarantee translate.html is never replaced. The href/rel
       // attributes stay in place as a fallback for keyboard, middle-click,
       // long-press "open in new tab", and any JS-disabled context.
       document.querySelectorAll('a.js-newtab').forEach(function (link) {
         link.addEventListener('click', function (e) {
           var opened = window.open(link.href, '_blank', 'noopener,noreferrer');
-          if (opened) e.preventDefault(); // JS route worked — skip the default nav
-          // If window.open was blocked (e.g. popup blocker), do nothing here:
-          // the browser falls through to the anchor's own target="_blank".
+          if (opened) e.preventDefault();
         });
       });
     })();
