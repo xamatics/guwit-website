@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en-NG">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gungbe Dictionary — Guwit Technology Solutions Ltd</title>
+<meta name="description" content="A Gungbe Dictionary, built on Google Sheets by Guwit Technology Solutions Ltd.">
+<meta name="robots" content="noindex">
+<meta name="author" content="Guwit Technology Solutions Ltd">
+<link rel="canonical" href="https://guwit.com/dictionary.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Guwit Technology Solutions Ltd">
+<meta property="og:title" content="Gungbe Dictionary — Guwit Technology Solutions Ltd">
+<meta property="og:description" content="A Gungbe Dictionary App">
+<meta property="og:url" content="https://guwit.com/dictionary.html">
+<meta property="og:image" content="https://guwit.com/assets/img/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#7B5C9D">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="author" href="humans.txt">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Page-specific rules only — everything else (tokens, .site-header,
+     .brand, .eyebrow, .btn / .btn-line / .btn-sm, focus ring) comes from
+     assets/style.css so this page stays in sync with the rest of the site. */
+
+  html, body { height:100%; }
+
+  .frame-wrap{
+    --topbar-h:76px; /* matches .header-inner's fixed height in assets/style.css */
+    position:relative;
+    height:calc(100vh - var(--topbar-h));
+    height:calc(100dvh - var(--topbar-h));
+  }
+  iframe{ width:100%; height:100%; border:0; display:block; background:var(--white); }
+
+  .page-label{ flex:1 1 auto; min-width:0; }
+  .tool-links{ display:flex; gap:10px; flex:none; }
+
+  /* assets/style.css hides .header-inner .btn at ≤760px so a marketing CTA
+     can hand off to the hamburger menu. These two buttons are functional
+     navigation, not a CTA — keep them visible and tappable on mobile. */
+  @media (max-width:760px){
+    .page-label{ display:none; }
+    .header-inner .tool-links .btn{ display:inline-flex; }
+    .tool-links .btn{ padding:8px 12px; font-size:.8rem; }
+  }
+
+  .loading{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px;
+    background:var(--paper); transition:opacity .25s ease;
+  }
+  .loading.hide{ opacity:0; pointer-events:none; }
+  .spinner{
+    width:26px; height:26px; border-radius:50%;
+    border:3px solid var(--line); border-top-color:var(--plum);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .loading p{ margin:0; font-size:.85rem; color:var(--ink-soft); }
+
+  .fallback{
+    position:absolute; inset:0; display:none; flex-direction:column;
+    align-items:center; justify-content:center; gap:16px;
+    background:var(--paper); text-align:center; padding:28px;
+  }
+  .fallback.show{ display:flex; }
+  .fallback h2{
+    margin:0; font-family:var(--display); font-weight:600;
+    font-size:1.3rem; color:var(--plum-ink);
+  }
+  .fallback p{ margin:0; max-width:420px; font-size:.9rem; color:var(--ink-soft); line-height:1.6; }
+</style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="https://guwit.com/">
+        <span class="brand-name">Guwit</span>
+      </a>
+
+      <div class="page-label">
+        <span class="eyebrow">Gungbe Dictionary</span>
+      </div>
+
+      <nav class="tool-links" aria-label="Related tools">
+        <a class="btn btn-line btn-sm js-newtab" href="https://guwit.com/pcm.html">Visit Website</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="frame-wrap">
+    <div class="loading" id="loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading the dictionary…</p>
+    </div>
+
+    <div class="fallback" id="fallback">
+      <h2>The dictionary didn't load here</h2>
+      <p>
+        This usually means the deployment needs a Google sign-in, which
+        Google doesn't allow inside an embedded page. Open it directly instead.
+      </p>
+      <a class="btn"
+         href="https://script.google.com/macros/s/AKfycbz1a3S-sPzGDtk54AHIaRygtXG2Jqhc5JMk8P7RGpCYj3a_Ieq_f0zUC-f53IEgwnFsxQ/exec"
+         target="_blank" rel="noopener">Open Dictionary</a>
+    </div>
+
+    <iframe
+      id="app-frame"
+      title="Universal Translation OS"
+      src="https://script.google.com/macros/s/AKfycbz1a3S-sPzGDtk54AHIaRygtXG2Jqhc5JMk8P7RGpCYj3a_Ieq_f0zUC-f53IEgwnFsxQ/exec"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="clipboard-write"
+    ></iframe>
+  </div>
+
+  <script>
+    (function () {
+      var loading = document.getElementById('loading');
+      var fallback = document.getElementById('fallback');
+      var frame = document.getElementById('app-frame');
+      var settled = false;
+
+      function settle(ok) {
+        if (settled) return;
+        settled = true;
+        loading.classList.add('hide');
+        if (!ok) fallback.classList.add('show');
+      }
+
+      // The iframe's 'load' event fires once the document inside it (or a
+      // sign-in error page) has loaded — either way, stop showing "loading".
+      frame.addEventListener('load', function () { settle(true); });
+
+      // Safety net: if 'load' never fires (blocked frame, network failure),
+      // fall back to a direct link rather than spinning forever.
+      window.setTimeout(function () { settle(!settled ? false : true); }, 12000);
+
+      // Related-tool links: some mobile browsers and in-app webviews (e.g.
+      // an app's embedded browser, or a PWA shell) silently ignore
+      // target="_blank" and navigate the current tab instead. Forcing the
+      // new tab explicitly, on the same user gesture, is the reliable way
+      // to guarantee translate.html is never replaced. The href/rel
+      // attributes stay in place as a fallback for keyboard, middle-click,
+      // long-press "open in new tab", and any JS-disabled context.
+      document.querySelectorAll('a.js-newtab').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          var opened = window.open(link.href, '_blank', 'noopener,noreferrer');
+          if (opened) e.preventDefault();
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
