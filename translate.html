@@ -33,10 +33,20 @@
   .frame-wrap{
     --topbar-h:76px; /* matches .header-inner's fixed height in assets/style.css */
     position:relative;
+    /* min-height, not height: the embedded app now reports its own content
+       height (see the 'message' listener below) and the iframe is resized
+       to match via inline style. This is just the floor/fallback used
+       before that first report arrives, so there's still a sensible
+       full-screen app feel on first paint instead of a collapsed sliver. */
+    min-height:calc(100vh - var(--topbar-h));
+    min-height:calc(100dvh - var(--topbar-h));
+  }
+  iframe{
+    width:100%;
     height:calc(100vh - var(--topbar-h));
     height:calc(100dvh - var(--topbar-h));
+    border:0; display:block; background:var(--white);
   }
-  iframe{ width:100%; height:100%; border:0; display:block; background:var(--white); }
 
   .page-label{ flex:1 1 auto; min-width:0; }
   .tool-links{ display:flex; gap:10px; flex:none; }
@@ -144,6 +154,19 @@
       // Safety net: if 'load' never fires (blocked frame, network failure),
       // fall back to a direct link rather than spinning forever.
       window.setTimeout(function () { settle(!settled ? false : true); }, 12000);
+
+      // The app inside the iframe posts its own content height (see
+      // reportHeight() in index.html) so this page can size the visible
+      // iframe to match, instead of pinning it to a fixed viewport height
+      // that leaves blank space below short views (like the workspace
+      // picker) or clips tall ones. Apps Script wraps the app in its own
+      // sandboxed iframe on top of ours, so the message crosses more than
+      // one frame boundary — postMessage handles that fine as long as the
+      // sender targets window.top, which index.html does.
+      window.addEventListener('message', function (e) {
+        if (!e.data || e.data.source !== 'ut-app' || typeof e.data.height !== 'number') return;
+        frame.style.height = Math.max(e.data.height, 320) + 'px';
+      });
 
       // Related-tool links: some mobile browsers and in-app webviews (e.g.
       // an app's embedded browser, or a PWA shell) silently ignore
